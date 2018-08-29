@@ -1,6 +1,8 @@
 const express = require('express');
 const socket = require('socket.io');
+const mg = require('mongoose');
 
+//mg.connect('mongodb://admin:5rdxdr5#1@ds137812.mlab.com:37812/matchmaking');
 
 const app = express()
 
@@ -25,5 +27,4 @@ io.on('connection', (socket)=>{
     socket.on('queue-up', (data)=>{
         console.log(data.user_id);
     });
-
 });
