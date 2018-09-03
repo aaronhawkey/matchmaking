@@ -29,31 +29,22 @@ io.on('connection', (socket)=>{
     console.log(socket.id);
     
     socket.on('queue-up', (data)=>{
-        
-        // Querying user_id to see if already in Queue
-        result = Queue.findOne({user_id: data.user_id}, (err, queue)=>{
-            if(err){
-                console.log(err);
-            }
+ 
+        var newQueuer = new Queue({
+            _id: new mg.Types.ObjectId(),
+            user_id: data.user_id
         });
-        
-        // Checks to see if query came back.
-        if(!result){
-            var newQueuer = new Queue({
-                _id: new mg.Types.ObjectId(),
-                user_id: data.user_id
+
+        newQueuer.save()
+            .then(result =>{
+                console.log(result);
+            })
+            .catch(err =>{
+                if(err.code == 11000){
+                    console.log('User is already in Queue...');
+                }
             });
-    
-            newQueuer.save()
-                .then(result =>{
-                    console.log(result);
-                })
-                .catch(err =>{
-                    console.log(err);
-                })
-        }else{
-            // User already exists.
-            console.log('User already exists');
-        }
-    });
+        });
+
+
 });
